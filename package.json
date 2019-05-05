@@ -1,0 +1,8 @@
+{
+  "name": "streaming-api",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless": "^1.41.1"
+  }
+}
