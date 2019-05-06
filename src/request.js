@@ -1,3 +1,5 @@
+const logger = require('./logger');
+
 const HEADERS = { 'Content-Type': 'application/json; charset=utf-8' };
 
 function respondSuccess(callback, result) {
@@ -10,7 +12,7 @@ function respondSuccess(callback, result) {
 }
 
 function respondError(callback, statusCode, error, message) {
-  console.error(error); // TODO: structured logging
+  logger.info(error);
   callback(null, {
     statusCode,
     headers: HEADERS,

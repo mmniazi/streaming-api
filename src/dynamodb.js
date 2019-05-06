@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies, global-require
+const logger = require('./logger');
 
 const MAX_STREAMS = 3;
 const MIN_STREAMS = 0;
@@ -26,9 +27,9 @@ function initDynamoLocal() {
 
   dynamodb.createTable(params, (err, data) => {
     if (err && err.code !== 'ResourceInUseException') {
-      console.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2));
+      logger.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2));
     } else if (!err) {
-      console.log('Created table. Table description JSON:', JSON.stringify(data, null, 2));
+      logger.log('Created table. Table description JSON:', JSON.stringify(data, null, 2));
     }
   });
 
