@@ -1,6 +1,8 @@
 const {dynamoDbParams} = require('../dynamodb');
 const {respondError, respondSuccess, validateParams} = require('../request');
 
+const limitReachedMsg = 'Maximum of 3 live streams are allowed per user';
+
 function start(dynamoDb) {
     return (event, context, callback) => {
         const userId = validateParams(callback, event.body);
@@ -18,4 +20,4 @@ function start(dynamoDb) {
     }
 }
 
-module.exports = start;
+module.exports = {start, limitReachedMsg};

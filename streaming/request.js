@@ -1,10 +1,10 @@
-const HEADERS = {'Content-Type': 'text/html; charset=utf-8'};
+const HEADERS = {'Content-Type': 'application/json; charset=utf-8'};
 
 function respondSuccess(callback, result) {
     const response = {
         statusCode: 200,
         headers: HEADERS,
-        body: result.Item,
+        body: JSON.stringify(result.Item),
     };
     callback(null, response);
 }
@@ -14,7 +14,7 @@ function respondError(callback, statusCode, message) {
     callback(null, {
         statusCode: statusCode,
         headers: HEADERS,
-        body: message,
+        body: JSON.stringify({'statusCode': statusCode, message: message}),
     });
 }
 
