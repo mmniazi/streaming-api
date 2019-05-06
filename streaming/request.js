@@ -9,8 +9,8 @@ function respondSuccess(callback, result) {
     callback(null, response);
 }
 
-function respondError(callback, statusCode, message) {
-    console.error(message); // TODO: structured logging
+function respondError(callback, statusCode, error, message) {
+    console.error(error); // TODO: structured logging
     callback(null, {
         statusCode: statusCode,
         headers: HEADERS,
@@ -28,7 +28,7 @@ function validateParams(callback, body) {
     } catch (e) {
     } // ignore json parsing failure and respond with error
 
-    respondError(callback, 400, errorMsg);
+    respondError(callback, 400, errorMsg, errorMsg);
     return null
 }
 

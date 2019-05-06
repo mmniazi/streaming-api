@@ -1,7 +1,9 @@
-const {updateCounterParams} = require('../dynamodb');
+const {incrCounterParams} = require('../dynamodb');
 const {respondError, respondSuccess, validateParams} = require('../request');
 
-const limitReachedMsg = 'Maximum of 3 live streams are allowed per user';
+const LIMIT_REACHED_ERROR = 'Maximum of 3 live streams are allowed per user';
+const DYNAMO_ERROR = 'Failed to fetch active streams count';
+const CONDITION_EXCEPTION = 'ConditionalCheckFailedException';
 
 function start(dynamoDb) {
     return (event, context, callback) => {
@@ -9,20 +11,18 @@ function start(dynamoDb) {
 
         if (userId == null) return;
 
-        const params = updateCounterParams(userId, +1);
+        const params = incrCounterParams(userId);
 
-        dynamoDb.updateItem(params, (error, result) => {
-            if (error) {
-                return respondError(callback, 501, 'Failed to fetch active streams count');
+        dynamoDb.update(params, (error, result) => {
+            if (error && error.code === CONDITION_EXCEPTION) {
+                return respondError(callback, 403, LIMIT_REACHED_ERROR, LIMIT_REACHED_ERROR);
+            } else if (error) {
+                return respondError(callback, 501, error, DYNAMO_ERROR);
             }
 
-            if (result.Item.count >= 3) {
-                return respondError(callback, 403, limitReachedMsg);
-            }
-
-            respondSuccess(callback, result.Item);
+            respondSuccess(callback, {'streamCount': result.Attributes.streamCount});
         });
     }
 }
 
-module.exports = {start, limitReachedMsg};
+module.exports = {start, LIMIT_REACHED_ERROR, CONDITION_EXCEPTION};
