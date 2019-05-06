@@ -1,8 +1,6 @@
-'use strict';
-
-const {initDynamo} = require('./dynamodb');
-const {start} = require('./routes/start');
-const {end} = require('./routes/end');
+const { initDynamo } = require('./dynamodb');
+const { start } = require('./routes/start');
+const { end } = require('./routes/end');
 
 const dynamoDb = initDynamo();
 
