@@ -1,10 +1,10 @@
-const HEADERS = {'Content-Type': 'application/json; charset=utf-8'};
+const HEADERS = {'Content-Type': 'text/html; charset=utf-8'};
 
 function respondSuccess(callback, result) {
     const response = {
         statusCode: 200,
         headers: HEADERS,
-        body: JSON.stringify(result.Item),
+        body: result.Item,
     };
     callback(null, response);
 }
@@ -14,16 +14,16 @@ function respondError(callback, statusCode, message) {
     callback(null, {
         statusCode: statusCode,
         headers: HEADERS,
-        body: JSON.stringify({'statusCode': statusCode, message: message}),
+        body: message,
     });
 }
 
 function validateParams(callback, body) {
-    const errorMsg = 'userId (integer) field is required in json body';
+    const errorMsg = 'userId (string) field is required in json body';
     try {
         const data = JSON.parse(body);
-        if (!isNaN(data.userId)) {
-            return parseInt(data.userId);
+        if (typeof data.userId === 'string') {
+            return data.userId
         }
     } catch (e) {
     } // ignore json parsing failure and respond with error

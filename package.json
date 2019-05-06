@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest --coverage --verbose streaming",
     "deploy": "serverless deploy --region eu-west-2",
-    "unDeploy": "serverless remove --region eu-west-2",
+    "undeploy": "serverless remove --region eu-west-2",
     "logs": "serverless logs --region eu-west-2 -f start"
   }
 }
