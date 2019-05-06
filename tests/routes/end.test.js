@@ -1,4 +1,5 @@
-const {start, LIMIT_REACHED_ERROR, CONDITION_EXCEPTION} = require('./start');
+const {end, LIMIT_REACHED_ERROR} = require('../../src/routes/end');
+const {CONDITION_EXCEPTION} = require('../../src/dynamodb');
 
 const dynamoMock = {
     update: (params, callback) => {
@@ -12,18 +13,18 @@ const dynamoMock = {
     }
 };
 
-test('start request success', () => {
-    const startHandler = start(dynamoMock);
+test('end request success', () => {
+    const endHandler = end(dynamoMock);
     const event = {"body": `{\"userId\": \"1\"}`};
     const context = {};
     const callback = (error, reponse) => {
         expect(JSON.parse(reponse.body)).toStrictEqual({'streamCount': 2});
     };
-    startHandler(event, context, callback)
+    endHandler(event, context, callback)
 });
 
-test('start request limit reached', () => {
-    const startHandler = start(dynamoMock);
+test('end request limit reached', () => {
+    const endHandler = end(dynamoMock);
     const event = {"body": `{\"userId\": \"2\"}`};
     const context = {};
     const callback = (error, reponse) => {
@@ -31,5 +32,5 @@ test('start request limit reached', () => {
         expect(reponse.statusCode).toBe(403);
         expect(body.message).toBe(LIMIT_REACHED_ERROR);
     };
-    startHandler(event, context, callback)
+    endHandler(event, context, callback)
 });

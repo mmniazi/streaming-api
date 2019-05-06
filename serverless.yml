@@ -19,7 +19,7 @@ provider:
 
 functions:
   start:
-    handler: streaming/stream.start
+    handler: src/stream.start
     events:
       - http:
           path: stream/start
@@ -27,7 +27,7 @@ functions:
           cors: true
 
   end:
-    handler: streaming/stream.end
+    handler: src/stream.end
     events:
       - http:
           path: stream/end

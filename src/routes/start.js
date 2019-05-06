@@ -1,9 +1,7 @@
-const {incrCounterParams} = require('../dynamodb');
+const {incrCounterParams, DYNAMO_ERROR, CONDITION_EXCEPTION} = require('../dynamodb');
 const {respondError, respondSuccess, validateParams} = require('../request');
 
 const LIMIT_REACHED_ERROR = 'Maximum of 3 live streams are allowed per user';
-const DYNAMO_ERROR = 'Failed to fetch active streams count';
-const CONDITION_EXCEPTION = 'ConditionalCheckFailedException';
 
 function start(dynamoDb) {
     return (event, context, callback) => {
@@ -25,4 +23,4 @@ function start(dynamoDb) {
     }
 }
 
-module.exports = {start, LIMIT_REACHED_ERROR, CONDITION_EXCEPTION};
+module.exports = {start, LIMIT_REACHED_ERROR};
