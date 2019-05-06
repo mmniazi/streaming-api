@@ -1,34 +1,20 @@
 'use strict';
+const {dynamoDbParams, initDynamo} = require('dynamodb');
+const {respondError, respondSuccess, validateParams} = require('request');
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const dynamoDb = initDynamo();
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+module.exports.start = (event, context, callback) => {
+    const userId = validateParams(callback, event.body);
 
-module.exports.get = (event, context, callback) => {
-  const params = {
-    TableName: process.env.DYNAMODB_TABLE,
-    Key: {
-      id: event.pathParameters.userId,
-    },
-  };
+    if (userId == null) return;
 
-  dynamoDb.get(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch stream count item.',
-      });
-      return;
-    }
+    const params = dynamoDbParams(userId);
 
-    // create a response
-    const response = {
-      statusCode: 200,
-      body: JSON.stringify(result.Item),
-    };
-    callback(null, response);
-  });
+    dynamoDb.get(params, (error, result) => {
+        if (error) {
+            return respondError(callback, 501, 'Failed to fetch active streams count');
+        }
+        respondSuccess(callback, result);
+    });
 };

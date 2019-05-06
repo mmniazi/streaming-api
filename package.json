@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
+    "jest": "^24.8.0",
     "serverless": "^1.41.1"
+  },
+  "scripts": {
+    "test": "jest --coverage --verbose streaming",
+    "deploy": "serverless deploy --region eu-west-2",
+    "unDeploy": "serverless remove --region eu-west-2",
+    "logs": "serverless logs --region eu-west-2 -f start"
   }
 }

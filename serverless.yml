@@ -18,12 +18,20 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
-  get:
-    handler: streaming/stream.get
+  start:
+    handler: streaming/stream.start
     events:
       - http:
-          path: stream/{userId}
-          method: get
+          path: stream/start
+          method: post
+          cors: true
+
+  end:
+    handler: streaming/stream.end
+    events:
+      - http:
+          path: stream/end
+          method: post
           cors: true
 
 resources:
