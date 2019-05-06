@@ -4,7 +4,7 @@ function respondSuccess(callback, result) {
     const response = {
         statusCode: 200,
         headers: HEADERS,
-        body: JSON.stringify(result.Item),
+        body: JSON.stringify(result),
     };
     callback(null, response);
 }

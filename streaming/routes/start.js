@@ -1,4 +1,4 @@
-const {dynamoDbParams} = require('../dynamodb');
+const {updateCounterParams} = require('../dynamodb');
 const {respondError, respondSuccess, validateParams} = require('../request');
 
 const limitReachedMsg = 'Maximum of 3 live streams are allowed per user';
@@ -9,13 +9,18 @@ function start(dynamoDb) {
 
         if (userId == null) return;
 
-        const params = dynamoDbParams(userId);
+        const params = updateCounterParams(userId, +1);
 
-        dynamoDb.get(params, (error, result) => {
+        dynamoDb.updateItem(params, (error, result) => {
             if (error) {
                 return respondError(callback, 501, 'Failed to fetch active streams count');
             }
-            respondSuccess(callback, result);
+
+            if (result.Item.count >= 3) {
+                return respondError(callback, 403, limitReachedMsg);
+            }
+
+            respondSuccess(callback, result.Item);
         });
     }
 }

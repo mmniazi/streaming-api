@@ -4,16 +4,17 @@ function initDynamo() {
     return new AWS.DynamoDB.DocumentClient();
 }
 
-function dynamoDbParams(userId) {
+function updateCounterParams(userId, delta) {
     return {
         TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: userId,
-        },
+        Key: {id: userId},
+        UpdateExpression: 'SET count = count + :incr',
+        ExpressionAttributeValues: {':incr': {'N': delta}},
+        ReturnValues: 'UPDATED_OLD'
     };
 }
 
 module.exports = {
     initDynamo,
-    dynamoDbParams
+    updateCounterParams
 };

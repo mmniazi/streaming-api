@@ -1,7 +1,7 @@
 const {start, limitReachedMsg} = require('./start');
 
 const dynamoMock = {
-    get: (params, callback) => {
+    updateItem: (params, callback) => {
         if (params.Key.id === '1') {
             callback(null, {'Item': {'id': '1', 'count': 2}})
         } else if (params.Key.id === '2') {
@@ -28,7 +28,7 @@ test('start request limit reached', () => {
     const context = {};
     const callback = (error, reponse) => {
         const body = JSON.parse(reponse.body);
-        expect(body.statusCode).toBe(403);
+        expect(reponse.statusCode).toBe(403);
         expect(body.message).toBe(limitReachedMsg);
     };
     startHandler(event, context, callback)
