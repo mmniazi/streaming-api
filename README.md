@@ -66,3 +66,7 @@ curl --request POST \
   --header 'content-type: application/json' \
   --data '{"userId": "1"}'
 ```
+
+## Next steps
+- Add swagger
+- More tests
