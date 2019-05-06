@@ -1,10 +1,36 @@
+const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies, global-require
+
 const MAX_STREAMS = 3;
 const MIN_STREAMS = 0;
 const DYNAMO_ERROR = 'Failed to fetch active streams count';
 const CONDITION_EXCEPTION = 'ConditionalCheckFailedException';
 
 function initDynamo() {
-  const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies, global-require
+  return new AWS.DynamoDB.DocumentClient();
+}
+
+function initDynamoLocal() {
+  AWS.config.update({
+    endpoint: 'http://localhost:8000',
+    region: 'eu-west-2',
+  });
+
+  const dynamodb = new AWS.DynamoDB();
+
+  const params = {
+    TableName: 'streaming-api-dev',
+    KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
+    AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
+    ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 },
+  };
+
+  dynamodb.createTable(params, (err, data) => {
+    if (err && err.code !== 'ResourceInUseException') {
+      console.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2));
+    } else if (!err) {
+      console.log('Created table. Table description JSON:', JSON.stringify(data, null, 2));
+    }
+  });
 
   return new AWS.DynamoDB.DocumentClient();
 }
@@ -35,6 +61,7 @@ function decrCounterParams(userId) {
 
 module.exports = {
   initDynamo,
+  initDynamoLocal,
   incrCounterParams,
   decrCounterParams,
   DYNAMO_ERROR,
