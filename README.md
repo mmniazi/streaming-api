@@ -19,7 +19,7 @@ any constraints (only limited by lambda or dynamodb limits)
 
 ## Setup
 - Run `npm install` for setting up dependencies
-- Run `npm lint` and `npm test` for linting and testing
+- Run `npm run lint` and `npm test` for linting and testing
 - Please check `Running Locally` or `Running Remotely` headings for further details
    
 ## Running Locally
